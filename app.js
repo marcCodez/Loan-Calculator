@@ -1,10 +1,24 @@
 // Listen for submit
-document.querySelector('#loan-form').addEventListener('submit', calculateResults);
+// We will change the function for the event submit, to delay calculateResults
+// since calculateResults is no longer an event handler we can take the e out
+document.querySelector('#loan-form').addEventListener('submit', function(e){
+    // What we want to do is show the loader as soon as calculate is clicked
+
+    // Hide results - even when click the need to be initially hidden
+    document.querySelector('#results').style.display = 'none';
+
+    // Show loader
+    document.querySelector('#loading').style.display = 'block';
+
+    //We only want loader to show for a few seconds, so we use setTimeout again
+    setTimeout(calculateResults, 2000);
+
+     e.preventDefault();
+});
 
 
 // Calculate Results
-function calculateResults(e){
-    console.log('calculating...');
+function calculateResults(){
     // UI Vars
     const UIamount = document.querySelector('#amount');
     const UIinterest = document.querySelector('#interest');
@@ -31,6 +45,12 @@ function calculateResults(e){
         UImonthlyPayment.value = monthly.toFixed(2);
         UItotalPayment.value = (monthly * calculatedPayments).toFixed(2);
         UItotalInterest.value = ((monthly * calculatedPayments)-principal).toFixed(2);
+
+        //Show results
+        document.querySelector('#results').style.display = 'block';
+
+        // Hide loader spinner
+        document.querySelector('#loading').style.display = 'none';
     } else {
         // if not finite then something went wrong
         // We can just make a div in the html hide it initially and then show it
@@ -40,12 +60,16 @@ function calculateResults(e){
     }
 
 
-    // since its a form submit we want to prevent the default behaviour
-    e.preventDefault();
+   
 }
 
 // Show Error
 function showError(error){
+          //Hide results
+          document.querySelector('#results').style.display = 'none';
+
+          // Hide loader spinner
+          document.querySelector('#loading').style.display = 'none';
 // Create a div
 const errorDiv = document.createElement('div');
 
